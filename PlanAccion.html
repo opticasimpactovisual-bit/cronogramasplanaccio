@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuadro de Hallazgos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #ffffff;
+      color: #032e28;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    header img {
+      height: 60px;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-top: 20px;
+    }
+    table {
+      width: 95%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #3498db;
+      color: #fff;
+    }
+    select, input[type="date"] {
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .estado-realizado {
+      background-color: #2ecc71;
+      color: #fff;
+      font-weight: bold;
+    }
+    .estado-proceso {
+      background-color: #f1c40f;
+      color: #fff;
+      font-weight: bold;
+    }
+    .estado-rechazado {
+      background-color: #e74c3c;
+      color: #fff;
+      font-weight: bold;
+    }
+    .btn {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 15px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #55b7f8;
+    }
+    footer {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="D:\Documents\Administracion\San Antonio\San Antonio\Imagenes\Logo.png" alt="Logo Centro Óptico">
+    Centro Óptico San Antonio - NIT 40179945-1
+  </header>
+
+  <h1>Cuadro de Hallazgos</h1>
+  <table id="hallazgosTable">
+    <thead>
+      <tr>
+        <th>Hallazgos</th>
+        <th>Tipo de hallazgo</th>
+        <th>Fecha de inicio</th>
+        <th>Fecha final</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <button class="btn" onclick="agregarRegistro()">Agregar nuevo registro</button>
+
+  <footer>
+    📧 opticasimpactovisual@gmail.com | 📱 WhatsApp: 3023394660
+  </footer>
+
+  <script>
+    function cargarDatos() {
+      const datos = JSON.parse(localStorage.getItem("hallazgos")) || [];
+      const tbody = document.getElementById("hallazgosTable").getElementsByTagName("tbody")[0];
+      tbody.innerHTML = "";
+      datos.forEach(registro => {
+        const fila = tbody.insertRow();
+        fila.innerHTML = `
+          <td contenteditable="true">${registro.hallazgo}</td>
+          <td>
+            <select onchange="guardarDatos()">
+              <option value="Incidente estructural" ${registro.tipo==="Incidente estructural"?"selected":""}>Incidente estructural</option>
+              <option value="Requerimiento documental" ${registro.tipo==="Requerimiento documental"?"selected":""}>Requerimiento documental</option>
+              <option value="Incidente documental" ${registro.tipo==="Incidente documental"?"selected":""}>Incidente documental</option>
+            </select>
+          </td>
+          <td><input type="date" value="${registro.inicio}" onchange="guardarDatos()"></td>
+          <td><input type="date" value="${registro.final}" onchange="guardarDatos()"></td>
+          <td>
+            <select onchange="cambiarEstado(this)">
+              <option value="realizado" ${registro.estado==="realizado"?"selected":""}>Realizado</option>
+              <option value="proceso" ${registro.estado==="proceso"?"selected":""}>En proceso</option>
+              <option value="rechazado" ${registro.estado==="rechazado"?"selected":""}>Rechazado</option>
+            </select>
+          </td>
+        `;
+        cambiarEstado(fila.querySelector("select"));
+      });
+    }
+
+    function guardarDatos() {
+      const filas = document.querySelectorAll("#hallazgosTable tbody tr");
+      const datos = [];
+      filas.forEach(fila => {
+        const registro = {
+          hallazgo: fila.cells[0].innerText,
+          tipo: fila.cells[1].querySelector("select").value,
+          inicio: fila.cells[2].querySelector("input").value,
+          final: fila.cells[3].querySelector("input").value,
+          estado: fila.cells[4].querySelector("select").value
+        };
+        datos.push(registro);
+      });
+      localStorage.setItem("hallazgos", JSON.stringify(datos));
+    }
+
+    function cambiarEstado(select) {
+      select.classList.remove("estado-realizado", "estado-proceso", "estado-rechazado");
+      if (select.value === "realizado") {
+        select.classList.add("estado-realizado");
+      } else if (select.value === "proceso") {
+        select.classList.add("estado-proceso");
+      } else if (select.value === "rechazado") {
+        select.classList.add("estado-rechazado");
+      }
+      guardarDatos();
+    }
+
+    function agregarRegistro() {
+      const tbody = document.getElementById("hallazgosTable").getElementsByTagName("tbody")[0];
+      const fila = tbody.insertRow();
+      fila.innerHTML = `
+        <td contenteditable="true">Nuevo hallazgo</td>
+        <td>
+          <select onchange="guardarDatos()">
+            <option value="Incidente estructural">Incidente estructural</option>
+            <option value="Requerimiento documental">Requerimiento documental</option>
+            <option value="Incidente documental">Incidente documental</option>
+          </select>
+        </td>
+        <td><input type="date" onchange="guardarDatos()"></td>
+        <td><input type="date" onchange="guardarDatos()"></td>
+        <td>
+          <select onchange="cambiarEstado(this)">
+            <option value="realizado">Realizado</option>
+            <option value="proceso" selected>En proceso</option>
+            <option value="rechazado">Rechazado</option>
+          </select>
+        </td>
+      `;
+      cambiarEstado(fila.querySelector("select"));
+      guardarDatos();
+    }
+
+    cargarDatos();
+  </script>
+</body>
+</html>
