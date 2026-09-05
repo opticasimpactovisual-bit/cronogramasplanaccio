@@ -1,0 +1,91 @@
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #ffffff;
+  margin: 0;
+  padding: 30px 20px 60px;
+  text-align: center;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+header img {
+  max-height: 90px;
+}
+
+h1.titulo {
+  font-size: 28px;
+  color: #1a1a1a;
+  margin: 30px 0 60px;
+}
+
+.organigrama {
+  position: relative;
+  width: 780px;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 560px;
+}
+
+.caja {
+  position: absolute;
+  width: 300px;
+  height: 80px;
+  background: #6ec9f2;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(110, 201, 242, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.caja h3 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  color: #10331f;
+}
+.caja p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
+  color: #1c6b3a;
+}
+
+/* Posiciones de las cajas */
+#legal    { top: 0;     left: 240px; }  /* centro x = 390 */
+#director { top: 150px; left: 240px; }  /* centro x = 390 */
+#admin    { top: 310px; left: 40px;  }  /* borde derecho x = 340 */
+#ventas   { top: 300px; left: 500px; }  /* centro x = 530 */
+
+/* Lineas conectoras */
+.linea {
+  position: absolute;
+  background: #35b34a;
+}
+
+/* Euridice -> Miguel: vertical recta */
+.v1 { top: 80px;  left: 388px; width: 4px; height: 70px; }
+
+/* Miguel -> Francy: baja, gira a la izquierda, baja hasta la caja */
+.v2 { top: 230px; left: 388px; width: 4px;   height: 40px; }
+.h1 { top: 268px; left: 190px; width: 200px; height: 4px; }
+.v3 { top: 270px; left: 188px; width: 4px;   height: 40px; }
+
+/* Francy -> Asesor de ventas: sale a la derecha, gira y baja */
+.h2 { top: 348px; left: 340px; width: 190px; height: 4px; }
+.v4 { top: 350px; left: 528px; width: 4px;   height: 120px; }
+
+footer {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #444;
+}
+
+@media (max-width: 820px) {
+  .organigrama { transform: scale(0.72); transform-origin: top center; height: 400px; }
+}

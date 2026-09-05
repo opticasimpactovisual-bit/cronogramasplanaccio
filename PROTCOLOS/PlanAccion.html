@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="PROTOCOLOS\Style.css">  
+  <meta charset="UTF-8">
+  <title>Cuadro de Hallazgos</title>
+</head>
+<body>
+  <header>
+    <img src="D:\Documents\Administracion\San Antonio\San Antonio\Imagenes\Logo.png" alt="Logo Centro Óptico">
+    Centro Óptico San Antonio - NIT 40179945-1
+  </header>
+  <nav class="menu">
+   <ul>
+     <li><a href="D:\Documents\Administracion\San Antonio\Programacion\PROTOCOLOS\Index.html"> Inicio</a></li>
+  </nav>
+  <div class="contenido">
+
+    <h1>Plan de Acción — Visita Secretaría de Salud</h1>
+
+    <div class="seccion">
+      <h2>📋 Introducción</h2>
+      <p>La visita de la secretaría de salud constituye un proceso clave para el establecimiento, ya que evalúa el cumplimiento de las normas sanitarias, de calidad y seguridad en nuestra organización. Este proceso de inspección representa una oportunidad para demostrar nuestro compromiso con la excelencia en la atención, la protección de la salud de nuestros usuarios y la transparencia en la gestión.</p>
+      <p>Este plan de acción ha sido diseñado con el propósito de organizar de manera clara y estructurada las actividades previas, durante y posteriores a la visita, asegurando que cada área del establecimiento esté preparada y alineada con los lineamientos establecidos. Asimismo, busca fortalecer la cultura organizacional de cumplimiento normativo, fomentar la mejora continua y consolidar la confianza de la comunidad y de las autoridades en la calidad de nuestros servicios.</p>
+    </div>
+
+    <div class="seccion">
+      <h2>🎯 Objetivos</h2>
+      <p>Asegurar que el establecimiento esté preparado para recibir la visita de la secretaría de salud, demostrando el cumplimiento integral de las normas sanitarias, de calidad y seguridad en la atención. Este plan busca:</p>
+      <ul>
+        <li>Garantizar la protección de la salud de pacientes, personal y comunidad.</li>
+        <li>Mostrar evidencia clara de la implementación de protocolos de bioseguridad, gestión de riesgos y mejora continua.</li>
+        <li>Fortalecer la cultura organizacional de cumplimiento normativo y buenas prácticas.</li>
+        <li>Generar confianza y transparencia frente a las autoridades de salud.</li>
+      </ul>
+    </div>
+
+    <div class="seccion">
+      <h2>🔎 Alcance</h2>
+      <p>El plan de acción aplica a todas las áreas y procesos del establecimiento, e incluye lo siguiente:</p>
+      <ul>
+        <li><b>Área administrativa:</b> gestión documental, licencias, contratos y registros oficiales.</li>
+        <li><b>Área de apoyo:</b> mantenimiento de equipos y limpieza.</li>
+        <li><b>Personal en general:</b> cumplimiento de normas de presentación y capacitación continua.</li>
+      </ul>
+    </div>
+
+    <div class="seccion">
+      <h2>✅ Acciones previas a la visita</h2>
+      <ul>
+        <li><b>Documentación:</b> actualizar manuales de procedimientos, protocolos de bioseguridad y registros de capacitación.</li>
+        <li><b>Infraestructura:</b> revisar limpieza, señalización, extintores, botiquines y rutas de evacuación. Asegurar el mantenimiento preventivo de los equipos médicos.</li>
+      </ul>
+    </div>
+
+    <div class="seccion">
+      <h2>📊 Cuadro de Hallazgos</h2>
+      <table id="hallazgosTable">
+        <thead>
+          <tr>
+            <th>Hallazgos</th>
+            <th>Tipo de hallazgo</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha final</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <button class="btn" onclick="agregarRegistro()">Agregar nuevo registro</button>
+    </div>
+
+  </div>
+
+  <footer>
+    📧 centroopticosantonio@gmail.com | 📱 WhatsApp: 3023394660
+  </footer>
+
+  <script>
+    // URL de tu backend (Node.js). Si el backend corre en otra máquina,
+    // cambia "localhost" por la IP de esa máquina, ej: http://192.168.1.50:3000/api/hallazgos
+    const API_URL = 'http://localhost:3000/api/hallazgos';
+
+    async function cargarDatos() {
+      try {
+        const res = await fetch(API_URL);
+        const datos = await res.json();
+        const tbody = document.getElementById("hallazgosTable").getElementsByTagName("tbody")[0];
+        tbody.innerHTML = "";
+        datos.forEach(registro => {
+          const fila = tbody.insertRow();
+          fila.dataset.id = registro.ID;
+          fila.innerHTML = `
+            <td contenteditable="true" onblur="guardarDatos(this.closest('tr'))">${registro.Hallazgos ?? ""}</td>
+            <td>
+              <select onchange="guardarDatos(this.closest('tr'))">
+                <option value="Incidente estructural" ${registro["Tipo de hallazgo"]==="Incidente estructural"?"selected":""}>Incidente estructural</option>
+                <option value="Requerimiento documental" ${registro["Tipo de hallazgo"]==="Requerimiento documental"?"selected":""}>Requerimiento documental</option>
+                <option value="Incidente documental" ${registro["Tipo de hallazgo"]==="Incidente documental"?"selected":""}>Incidente documental</option>
+              </select>
+            </td>
+            <td><input type="date" value="${registro["Fecha de inicio"] ? registro["Fecha de inicio"].split('T')[0] : ''}" onchange="guardarDatos(this.closest('tr'))"></td>
+            <td><input type="date" value="${registro["Fecha final"] ? registro["Fecha final"].split('T')[0] : ''}" onchange="guardarDatos(this.closest('tr'))"></td>
+            <td>
+              <select onchange="cambiarEstado(this)">
+                <option value="realizado" ${registro.Estado==="realizado"?"selected":""}>Realizado</option>
+                <option value="proceso" ${registro.Estado==="proceso"?"selected":""}>En proceso</option>
+                <option value="rechazado" ${registro.Estado==="rechazado"?"selected":""}>Rechazado</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn-eliminar" onclick="eliminarRegistro(this)">🗑️ Eliminar</button>
+            </td>
+          `;
+          cambiarEstado(fila.querySelector("select"));
+        });
+      } catch (err) {
+        console.error("Error al cargar datos:", err);
+        alert("No se pudo conectar con el servidor. Verifica que 'node server.js' esté corriendo.");
+      }
+    }
+
+    async function guardarDatos(fila) {
+      const id = fila.dataset.id;
+      const registro = {
+        hallazgo: fila.cells[0].innerText,
+        tipo: fila.cells[1].querySelector("select").value,
+        fechaInicio: fila.cells[2].querySelector("input").value,
+        fechaFinal: fila.cells[3].querySelector("input").value,
+        estado: fila.cells[4].querySelector("select").value
+      };
+
+      if (id) {
+        try {
+          await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registro)
+          });
+        } catch (err) {
+          console.error("Error al guardar:", err);
+        }
+      }
+    }
+
+    function cambiarEstado(select) {
+      select.classList.remove("estado-realizado", "estado-proceso", "estado-rechazado");
+      if (select.value === "realizado") {
+        select.classList.add("estado-realizado");
+      } else if (select.value === "proceso") {
+        select.classList.add("estado-proceso");
+      } else if (select.value === "rechazado") {
+        select.classList.add("estado-rechazado");
+      }
+      guardarDatos(select.closest("tr"));
+    }
+
+    async function agregarRegistro() {
+      const registro = {
+        hallazgo: "Nuevo hallazgo",
+        tipo: "Incidente estructural",
+        fechaInicio: null,
+        fechaFinal: null,
+        estado: "proceso"
+      };
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(registro)
+        });
+        await res.json();
+        cargarDatos();
+      } catch (err) {
+        console.error("Error al agregar registro:", err);
+      }
+    }
+
+    async function eliminarRegistro(boton) {
+      if (confirm("¿Seguro que deseas eliminar este registro?")) {
+        const fila = boton.closest("tr");
+        const id = fila.dataset.id;
+        try {
+          await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+          fila.remove();
+        } catch (err) {
+          console.error("Error al eliminar:", err);
+        }
+      }
+    }
+
+    cargarDatos();
+  </script>
+</body>
+</html>
