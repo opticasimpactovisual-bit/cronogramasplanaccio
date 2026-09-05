@@ -1,0 +1,286 @@
+:root {
+      --azul-primario: #2464a8;
+      --azul-claro: #3498db;
+      --azul-hover: #55b7f8;
+      --gris-oscuro: #2c3e50;
+      --gris-texto: #4a5560;
+      --fondo: #f4f6f9;
+      --verde: #2ecc71;
+      --amarillo: #f1c40f;
+      --rojo: #e74c3c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--fondo);
+      margin: 0;
+      padding: 0;
+      color: var(--gris-texto);
+      line-height: 1.6;
+    }
+
+/* ---------- MENÚ DE NAVEGACIÓN ---------- */
+.menu {
+  background: var(--azul-primario);
+  padding: 0;
+}
+.menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.menu > ul > li {
+  position: relative;
+}
+.menu a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 20px;
+  font-size: 20px;
+}
+.menu a:hover {
+  background: var(--azul-hover);
+}
+.menu .submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  min-width: 200px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  z-index: 20;
+}
+.menu .submenu a {
+  color: var(--gris-oscuro);
+  padding: 10px 15px;
+}
+.menu .submenu a:hover {
+  background: var(--fondo);
+}
+.menu li:hover > .submenu {
+  display: block;
+}
+
+    /* ---------- HEADER ---------- */
+    header {
+      background: #ffffff;
+      color: var(--gris-oscuro);
+      padding: 18px 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 2;
+    }
+    header img {
+      height: 60px;
+      border-radius: 8px;
+    }
+
+    /* ---------- CONTENEDOR GENERAL ---------- */
+    .contenido {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 20px 40px;
+    }
+
+    /* ---------- TÍTULOS ---------- */
+    h1 {
+      text-align: center;
+      color: var(--gris-oscuro);
+      margin-top: 30px;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    h2 {
+      color: var(--azul-primario);
+      margin-top: 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 3px solid var(--azul-claro);
+      padding-bottom: 10px;
+    }
+
+    /* ---------- TARJETAS DE SECCIÓN ---------- */
+    .seccion {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      padding: 25px 30px;
+      margin: 25px 0;
+    }
+
+    .seccion p {
+      text-align: justify;
+      margin: 12px 0;
+    }
+
+    /* ---------- LISTAS ---------- */
+    .seccion ul {
+      margin: 12px 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .seccion li {
+      position: relative;
+      padding: 10px 10px 10px 34px;
+      margin-bottom: 8px;
+      background: var(--fondo);
+      border-left: 4px solid var(--azul-claro);
+      border-radius: 6px;
+      text-align: justify;
+    }
+
+    .seccion li::before {
+      content: "✓";
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      color: var(--azul-primario);
+      font-weight: bold;
+    }
+
+    .seccion li b {
+      color: var(--gris-oscuro);
+    }
+
+    /* ---------- TABLA DE HALLAZGOS ---------- */
+    table {
+      width: 100%;
+      margin: 15px 0 5px;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      table-layout: fixed;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #e3e7eb;
+      padding: 12px 10px;
+      text-align:justify;
+      text-align-last: center;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+      vertical-align: middle;
+    }
+    th {
+      background: var(--azul-primario);
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    tbody tr:hover {
+      background: #eef5fc;
+    }
+
+    th:nth-child(1), td:nth-child(1) { width: 40%; }
+    th:nth-child(2), td:nth-child(2) { width: 18%; }
+    th:nth-child(3), td:nth-child(3) { width: 12%; }
+    th:nth-child(4), td:nth-child(4) { width: 12%; }
+    th:nth-child(5), td:nth-child(5) { width: 12%; }
+    th:nth-child(6), td:nth-child(6) { width: 10%; }
+
+    select, input[type="date"] {
+      padding: 6px 8px;
+      border-radius: 5px;
+      border: 1px solid #cbd5e0;
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .estado-realizado {
+      background-color: var(--verde);
+      color: #fff;
+      font-weight: bold;
+    }
+    .estado-proceso {
+      background-color: var(--amarillo);
+      color: #fff;
+      font-weight: bold;
+    }
+    .estado-rechazado {
+      background-color: var(--rojo);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .btn {
+      display: block;
+      margin: 20px auto 5px;
+      padding: 12px 22px;
+      background: var(--azul-primario);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    .btn:hover {
+      background: var(--azul-hover);
+    }
+
+    .btn-eliminar {
+      background: var(--rojo);
+      color: #fff;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s ease;
+    }
+    .btn-eliminar:hover {
+      background: #c0392b;
+    }
+
+    .botton {
+      background: #0e84c9;
+      color: #fff;
+      border: none;
+      padding: 18px 15px;
+      border-radius: 4px;
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 400px;
+    }
+
+    footer {
+      background: var(--gris-oscuro);
+      color: #fff;
+      text-align: center;
+      padding: 16px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .seccion { padding: 18px; }
+      header { font-size: 16px; }
+    }

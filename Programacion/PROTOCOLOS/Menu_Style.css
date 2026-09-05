@@ -1,0 +1,172 @@
+:root {
+      --azul-primario: #2464a8;
+      --azul-claro: #3498db;
+      --azul-hover: #55b7f8;
+      --gris-oscuro: #2c3e50;
+      --gris-texto: #4a5560;
+      --fondo: #f4f6f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--fondo);
+      margin: 0;
+      padding: 0;
+      color: var(--gris-texto);
+      line-height: 1.6;
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      background: #ffffff;
+      color: var(--gris-oscuro);
+      padding: 18px 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 2;
+    }
+    header img {
+      height: 60px;
+      border-radius: 8px;
+    }
+
+    /* ---------- MENÚ DE NAVEGACIÓN ---------- */
+    .menu {
+      background: var(--azul-primario);
+      padding: 0;
+    }
+    .menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .menu > ul > li {
+      position: relative;
+    }
+    .menu a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 20px;
+      font-size: 15px;
+    }
+    .menu a:hover {
+      background: var(--azul-hover);
+    }
+    .menu .submenu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      min-width: 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      border-radius: 4px;
+      z-index: 20;
+    }
+    .menu .submenu a {
+      color: var(--gris-oscuro);
+      padding: 10px 15px;
+    }
+    .menu .submenu a:hover {
+      background: var(--fondo);
+    }
+    .menu li:hover > .submenu {
+      display: block;
+    }
+
+    /* ---------- CONTENEDOR GENERAL ---------- */
+    .contenido {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 20px 40px;
+    }
+
+    /* ---------- BIENVENIDA ---------- */
+    .bienvenida {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+    .bienvenida h1 {
+      color: var(--gris-oscuro);
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    .bienvenida p {
+      font-size: 16px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* ---------- TARJETAS DE ACCESO RÁPIDO ---------- */
+    h2{
+      color: var(--azul-primario);
+      margin-top: 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 10px;
+    }
+    .accesos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .tarjeta {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      padding: 25px 20px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--gris-texto);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-top: 4px solid var(--azul-claro);
+    }
+    .tarjeta:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+    .tarjeta .icono {
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+    .tarjeta h3 {
+      color: var(--gris-oscuro);
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+    .tarjeta p {
+      font-size: 13px;
+      margin: 0;
+    }
+
+    footer {
+      background: var(--gris-oscuro);
+      color: #fff;
+      text-align: center;
+      padding: 16px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      header { font-size: 16px; }
+      .bienvenida h1 { font-size: 24px; }
+    }
