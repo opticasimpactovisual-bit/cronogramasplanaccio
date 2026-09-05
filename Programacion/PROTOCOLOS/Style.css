@@ -198,7 +198,7 @@
       background: #eef5fc;
     }
 
-    th:nth-child(1), td:nth-child(1) { width: 40%; }
+    th:nth-child(1), td:nth-child(1) { width: 20%; }
     th:nth-child(2), td:nth-child(2) { width: 18%; }
     th:nth-child(3), td:nth-child(3) { width: 12%; }
     th:nth-child(4), td:nth-child(4) { width: 12%; }
@@ -268,7 +268,7 @@
       border-radius: 4px;
       font-size: 20px;
       cursor: pointer;
-      margin-left: 400px;
+      margin-left: 10px;
     }
 
     footer {
