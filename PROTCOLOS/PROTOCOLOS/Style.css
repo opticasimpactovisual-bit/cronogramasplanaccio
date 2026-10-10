@@ -260,6 +260,21 @@
       background: #c0392b;
     }
 
+    .btn-imprimir {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      background-color: #1F3864;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      margin-top: 16px;
+      cursor: pointer;
+  }
+  .btn-imprimir:hover {
+    background-color: #2E74B5;
+  }
+
     footer {
       background: var(--gris-oscuro);
       color: #fff;
