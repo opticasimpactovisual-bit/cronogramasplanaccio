@@ -166,6 +166,7 @@
     /* ---------- TABLA DE HALLAZGOS ---------- */
     table {
       width: 100%;
+      max-width: 100%;
       margin: 15px 0 5px;
       border-collapse: collapse;
       background: #fff;
@@ -198,12 +199,12 @@
       background: #eef5fc;
     }
 
-    th:nth-child(1), td:nth-child(1) { width: 40%; }
-    th:nth-child(2), td:nth-child(2) { width: 18%; }
-    th:nth-child(3), td:nth-child(3) { width: 12%; }
-    th:nth-child(4), td:nth-child(4) { width: 12%; }
-    th:nth-child(5), td:nth-child(5) { width: 12%; }
-    th:nth-child(6), td:nth-child(6) { width: 10%; }
+    #hallazgosTable th:nth-child(1), #hallazgosTable td:nth-child(1) { width: 36%; }
+    #hallazgosTable th:nth-child(2), #hallazgosTable td:nth-child(2) { width: 18%; }
+    #hallazgosTable th:nth-child(3), #hallazgosTable td:nth-child(3) { width: 12%; }
+    #hallazgosTable th:nth-child(4), #hallazgosTable td:nth-child(4) { width: 12%; }
+    #hallazgosTable th:nth-child(5), #hallazgosTable td:nth-child(5) { width: 12%; }
+    #hallazgosTable th:nth-child(6), #hallazgosTable td:nth-child(6) { width: 10%; }
 
     select, input[type="date"] {
       padding: 6px 8px;
@@ -292,13 +293,13 @@
     * { box-sizing: border-box; }
       body { font-family: Calibri, Arial, sans-serif; font-size: 14px; color: #111; background: #f2f2f2; margin: 0; padding: 16px; }
       .hoja { overflow-x: auto; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.15); }
-      table { border-collapse: collapse; margin: 0 auto; table-layout: fixed; width: 1220px; }
-      td { height: 20px; padding: 0 3px; white-space: nowrap; overflow: hidden; text-align: center; background: #fff; }
-      td.b { border: 0px solid #463c3c; }
-      td.n { font-weight: bold; }
-      td.a { text-align: left; }
-      td.r { text-align: left; }
-      td.d { font-size: 12px; padding: 0; }
-      td.mes { text-align: center; }
-      tr:first-child td { font-size: 18px; text-align: center; }
+      table.hoja { border-collapse: collapse; margin: 0 auto; table-layout: fixed; width: 1220px; }
+      .hoja td { height: 20px; padding: 0 3px; white-space: nowrap; overflow: hidden; text-align: center; background: #fff; }
+      .hoja td.b { border: 0px solid #463c3c; }
+      .hoja td.n { font-weight: bold; }
+      .hoja td.a { text-align: left; }
+      .hoja td.r { text-align: left; }
+      .hoja td.d { font-size: 12px; padding: 0; }
+      .hoja td.mes { text-align: center; }
+      .hoja tr:first-child td { font-size: 18px; text-align: center; }
       @media print { body { background: #fff; padding: 0; } .hoja { box-shadow: none; } }
