@@ -135,10 +135,9 @@
 
     .imagen-flujo {
       display: block;
-      width: 100%;
-      max-width: 900px;
+      max-width: 100%;
       height: auto;
-      margin: 16px auto;
+      margin: 12px auto;
     }
 
     /* ---------- LISTAS ---------- */
