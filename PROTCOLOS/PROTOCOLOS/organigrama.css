@@ -80,10 +80,69 @@ h1.titulo {
 .h2 { top: 348px; left: 340px; width: 190px; height: 4px; }
 .v4 { top: 350px; left: 528px; width: 4px;   height: 120px; }
 
-footer {
+
+/* Organigrama de asesores */
+
+.wrap{
+  position:relative;
+  width:1536px;
+  height:1108px;margin:0
+  auto;background:#F6F8F7;
+  color:#14261F;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:14px;line-height:20px
+}
+.abs{
+  position:absolute
+}
+.card{
+  position:absolute;
+  box-sizing:border-box;
+  padding:16px;display:flex;
+  text-align:left;
+  border-radius:10px
+}
+.fn{
+  top:536px;
+  width:256px;
+  height:300px;
+  align-items:flex-start;
+  background:#fff;
+  border:1px solid #1C7C8C;
+  font-size:13px;
+  line-height:18px
+}
+.fn b,.panel b{
+  font-size:16px;
+  line-height:22px
+}
+.panel{
+  top:884px;
+  width:688px;
+  height:160px;
+  align-items:flex-start;
+  background:#E8EFEC;
+  font-size:13px;
+  line-height:18px
+}
+.sub{
+  font-size:13px;
+  color:#4A5B53
+}
+.line{
+  position:absolute;
+  background:#6F8A7D
+}
+.v{
+  width:2px
+}
+
+body > footer {
+  background: #2c3e50;
   margin-top: 40px;
   font-size: 14px;
-  color: #444;
+  color: #fff;
+  text-align: center;
+  padding: 16px;
 }
 
 @media (max-width: 820px) {
