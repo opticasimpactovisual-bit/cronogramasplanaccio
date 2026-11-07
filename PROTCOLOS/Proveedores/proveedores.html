@@ -23,7 +23,7 @@
       <input type="text" id="buscar" class="buscar" placeholder="Buscar por proveedor o NIT">
       <div class="tabla-scroll">
         <table>
-          <thead><tr><th>Fecha</th><th>Proveedor</th><th>NIT</th><th>Periodo</th><th>Puntaje</th><th>Categoría</th><th>¿Aceptado?</th></tr></thead>
+          <thead><tr><th>Fecha</th><th>Proveedor</th><th>NIT</th><th>Periodo</th><th>Puntaje</th><th>Categoría</th><th>¿Aceptado?</th><th><span class="sr-only">Acciones</span></th></tr></thead>
           <tbody id="filas"></tbody>
         </table>
       </div>
@@ -186,7 +186,8 @@ function pintarLista() {
       <td><b>${Number(e.puntaje).toFixed(2)}</b></td>
       <td><span class="badge ${esc(e.categoria)}">${esc(e.categoria)}</span></td>
       <td>${e.aceptado === 'S' ? 'Sí' : 'No'}</td>
-    </tr>`).join('') : `<tr><td colspan="7" class="empty">${lista.length ? 'Sin resultados.' : 'Aún no hay evaluaciones. Crea la primera con “Nueva evaluación”.'}</td></tr>`;
+      <td><button type="button" class="btn sm">Ver detalle</button></td>
+    </tr>`).join('') : `<tr><td colspan="8" class="empty">${lista.length ? 'Sin resultados.' : 'Aún no hay evaluaciones. Crea la primera con “Nueva evaluación”.'}</td></tr>`;
 }
 
 async function mostrarLista() {

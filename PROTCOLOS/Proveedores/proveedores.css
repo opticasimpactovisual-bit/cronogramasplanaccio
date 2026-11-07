@@ -18,6 +18,9 @@ h2 { font-size:16px; margin:0 0 12px; }
 .btn { border:1px solid var(--line); background:var(--card); color:var(--ink); padding:8px 14px; border-radius:8px; cursor:pointer; font:inherit; font-size:14px; }
 .btn.primary { background:var(--brand); border-color:var(--brand); color:#fff; font-weight:600; }
 .btn.danger { color:var(--danger); }
+.btn.sm { padding:4px 10px; font-size:13px; white-space:nowrap; }
+.btn.sm:hover { border-color:var(--brand); color:var(--brand); }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px; }
 #banner { display:none; margin:0 0 12px; padding:10px 14px; border-radius:8px; background:#fef3c7; color:#78350f; font-size:13px; }
 #msg { display:none; margin:0 0 12px; padding:10px 14px; border-radius:8px; font-size:14px; }
