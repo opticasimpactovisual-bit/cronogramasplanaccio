@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluación de proveedores</title>
+<link rel="stylesheet" href="proveedores.css">
+</head>
+<body>
+<header>
+  <h1>Matriz de evaluación de proveedores<small>Centro Óptico San Antonio</small></h1>
+  <button class="btn primary" id="btnNuevo">+ Nueva evaluación</button>
+</header>
+
+<main>
+  <div id="banner"></div>
+  <div id="msg" role="status"></div>
+
+  <!-- LISTA -->
+  <section id="vistaLista">
+    <div class="card">
+      <h2>Evaluaciones guardadas</h2>
+      <input type="text" id="buscar" class="buscar" placeholder="Buscar por proveedor o NIT">
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Fecha</th><th>Proveedor</th><th>NIT</th><th>Periodo</th><th>Puntaje</th><th>Categoría</th><th>¿Aceptado?</th></tr></thead>
+          <tbody id="filas"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULARIO -->
+  <section id="vistaForm" class="hide">
+    <div class="card">
+      <div class="grid">
+        <label class="f">Nombre del proveedor<input type="text" data-f="proveedor" maxlength="200"></label>
+        <label class="f">NIT<input type="text" data-f="nit" maxlength="30"></label>
+        <label class="f">Fecha<input type="date" data-f="fecha"></label>
+        <label class="f">Periodo de evaluación<input type="text" data-f="periodo" maxlength="100" placeholder="Ej. Enero – Junio 2026"></label>
+        <label class="f">Versión<input type="text" data-f="version" maxlength="30"></label>
+        <label class="f">Vigencia<input type="text" data-f="vigencia" maxlength="30"></label>
+        <label class="f">Código<input type="text" data-f="codigo" maxlength="30"></label>
+      </div>
+    </div>
+
+    <p class="ayuda">Selecciona el nivel de cumplimiento de cada criterio.</p>
+    <div id="criterios"></div>
+
+    <div class="card">
+      <div class="total">
+        <div><div class="etiqueta">PUNTAJE</div><div class="big" id="puntaje">–</div></div>
+        <div><div class="etiqueta sep">CATEGORÍA</div><span class="badge" id="cat">Sin calificar</span></div>
+        <label class="f aceptado">¿Se acepta al proveedor?
+          <select data-f="aceptado"><option value="">Seleccionar…</option><option value="S">Sí</option><option value="N">No</option></select>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="f">Observaciones<textarea data-f="observaciones" maxlength="2000"></textarea></label>
+    </div>
+
+    <div class="card">
+      <h2>Escala de categorías</h2>
+      <table class="ref">
+        <tr><td>4.5 a 5.0</td><td><b>Excelente</b> — Sobresale en casi todos los criterios. Rendimiento excepcional.</td></tr>
+        <tr><td>3.5 a 4.4</td><td><b>Bueno</b> — Cumple con la mayoría de los criterios de manera satisfactoria. Se puede mejorar en algunos aspectos.</td></tr>
+        <tr><td>2.5 a 3.4</td><td><b>Aceptable</b> — Cumple con los requisitos mínimos, pero hay áreas significativas de mejora.</td></tr>
+        <tr><td>1.0 a 2.4</td><td><b>Deficiente</b> — No cumple con los requisitos básicos y tiene múltiples áreas de mejora.</td></tr>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="btnGuardar">Guardar evaluación</button>
+      <button class="btn" id="btnImprimir">Imprimir</button>
+      <button class="btn" id="btnVolver">Volver a la lista</button>
+      <button class="btn danger hide" id="btnEliminar">Eliminar</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const ESCALA = [[1,'Muy deficiente'],[2,'Deficiente'],[3,'Aceptable'],[4,'Bueno'],[5,'Excelente']];
+const CRITERIOS_BASE = [
+  { id:1, nombre:'Precio', descripcion:'El costo del producto es competitivo en comparación con otros proveedores.', ponderacion:0.10 },
+  { id:2, nombre:'Calidad de producto', descripcion:'La calidad de los productos ofrecidos cumple con los estándares del laboratorio.', ponderacion:0.30 },
+  { id:3, nombre:'Tiempo de entrega', descripcion:'El proveedor entrega a tiempo o en el plazo estipulado.', ponderacion:0.20 },
+  { id:4, nombre:'Experiencia y reputación', descripcion:'El proveedor tiene experiencia trabajando con otros laboratorios ópticos.', ponderacion:0.10 },
+  { id:5, nombre:'Servicio al cliente', descripcion:'El proveedor tiene un buen servicio postventa y responde rápidamente a las consultas.', ponderacion:0.15 },
+  { id:6, nombre:'Cumplimiento normativo', descripcion:'El proveedor cumple con las regulaciones locales y cuenta con las certificaciones necesarias.', ponderacion:0.15 },
+];
+
+let criterios = [];
+let lista = [];
+let form = null;          // evaluación en edición
+let modoLocal = false;
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const round2 = (n) => Math.round(n * 100) / 100;
+const categoria = (p) => p >= 4.5 ? 'Excelente' : p >= 3.5 ? 'Bueno' : p >= 2.5 ? 'Aceptable' : 'Deficiente';
+const hoy = () => new Date().toLocaleDateString('en-CA');
+
+/* ---------- Capa de datos: API (SQL Server) con respaldo en localStorage ---------- */
+const store = {
+  get(k, def) { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+async function http(url, opts = {}) {
+  const r = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(data.error || 'Error ' + r.status); e.status = r.status; throw e; }
+  return data;
+}
+// Solo se pasa a modo local si no hay servidor (red) o la BD falla (5xx); los errores de validación se muestran
+const sinServidor = (e) => e.status === undefined || e.status >= 500;
+
+function activarModoLocal() {
+  if (modoLocal) return;
+  modoLocal = true;
+  const b = $('#banner');
+  b.style.display = 'block';
+  b.textContent = 'No hay conexión con la base de datos: las evaluaciones se guardan solo en este navegador. Inicia el servidor (npm start) y crea la base de datos con schema.sql para guardarlas en SQL Server.';
+}
+
+function calcular(cal) {
+  let t = 0, completo = true;
+  criterios.forEach(c => { const n = Number(cal[c.id]); if (n >= 1 && n <= 5) t += n * c.ponderacion; else completo = false; });
+  return { puntaje: round2(t), completo };
+}
+
+const api = {
+  async criterios() {
+    if (!modoLocal) { try { return await http('/api/criterios'); } catch (e) { if (!sinServidor(e)) throw e; activarModoLocal(); } }
+    return CRITERIOS_BASE;
+  },
+  async lista() {
+    if (!modoLocal) { try { return await http('/api/evaluaciones'); } catch (e) { if (!sinServidor(e)) throw e; activarModoLocal(); } }
+    return store.get('evals', []).map(e => ({ id:e.id, proveedor:e.proveedor, nit:e.nit, fecha:e.fecha, periodo:e.periodo, puntaje:e.puntaje, categoria:e.categoria, aceptado:e.aceptado }))
+      .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id - a.id);
+  },
+  async obtener(id) {
+    if (!modoLocal) { try { return await http('/api/evaluaciones/' + id); } catch (e) { if (!sinServidor(e)) throw e; activarModoLocal(); } }
+    return store.get('evals', []).find(e => e.id === id);
+  },
+  async guardar(datos) {
+    if (!modoLocal) {
+      try {
+        return await http(datos.id ? '/api/evaluaciones/' + datos.id : '/api/evaluaciones',
+          { method: datos.id ? 'PUT' : 'POST', body: JSON.stringify(datos) });
+      } catch (e) { if (!sinServidor(e)) throw e; activarModoLocal(); }
+    }
+    const evals = store.get('evals', []);
+    const { puntaje } = calcular(datos.calificaciones);
+    const reg = { ...datos, puntaje, categoria: categoria(puntaje) };
+    if (reg.id) { const i = evals.findIndex(e => e.id === reg.id); if (i >= 0) evals[i] = reg; else evals.push(reg); }
+    else { reg.id = Date.now(); evals.push(reg); }
+    store.set('evals', evals);
+    return { ok: true, id: reg.id };
+  },
+  async eliminar(id) {
+    if (!modoLocal) { try { return await http('/api/evaluaciones/' + id, { method: 'DELETE' }); } catch (e) { if (!sinServidor(e)) throw e; activarModoLocal(); } }
+    store.set('evals', store.get('evals', []).filter(e => e.id !== id));
+    return { ok: true };
+  },
+};
+
+/* ---------- Mensajes ---------- */
+let msgTimer;
+function aviso(texto, tipo = 'ok') {
+  const m = $('#msg');
+  m.textContent = texto; m.className = tipo; m.style.display = 'block';
+  clearTimeout(msgTimer);
+  if (tipo === 'ok') msgTimer = setTimeout(() => m.style.display = 'none', 3500);
+}
+
+/* ---------- Lista ---------- */
+function pintarLista() {
+  const q = $('#buscar').value.trim().toLowerCase();
+  const filas = lista.filter(e => !q || e.proveedor.toLowerCase().includes(q) || String(e.nit).toLowerCase().includes(q));
+  $('#filas').innerHTML = filas.length ? filas.map(e => `
+    <tr class="click" data-id="${e.id}">
+      <td>${esc(e.fecha)}</td><td>${esc(e.proveedor)}</td><td>${esc(e.nit)}</td><td>${esc(e.periodo || '')}</td>
+      <td><b>${Number(e.puntaje).toFixed(2)}</b></td>
+      <td><span class="badge ${esc(e.categoria)}">${esc(e.categoria)}</span></td>
+      <td>${e.aceptado === 'S' ? 'Sí' : 'No'}</td>
+    </tr>`).join('') : `<tr><td colspan="7" class="empty">${lista.length ? 'Sin resultados.' : 'Aún no hay evaluaciones. Crea la primera con “Nueva evaluación”.'}</td></tr>`;
+}
+
+async function mostrarLista() {
+  try { lista = await api.lista(); } catch (e) { aviso(e.message, 'err'); lista = []; }
+  $('#vistaForm').classList.add('hide');
+  $('#vistaLista').classList.remove('hide');
+  $('#btnNuevo').classList.remove('hide');
+  pintarLista();
+}
+
+/* ---------- Formulario ---------- */
+function nuevoForm() {
+  return { id:null, proveedor:'', nit:'', fecha:hoy(), periodo:'', version:'', vigencia:'', codigo:'', aceptado:'', observaciones:'', calificaciones:{} };
+}
+
+function pintarForm() {
+  document.querySelectorAll('[data-f]').forEach(el => el.value = form[el.dataset.f] ?? '');
+  $('#criterios').innerHTML = criterios.map(c => `
+    <div class="card crit">
+      <div class="crit-head"><h3>${esc(c.nombre)}</h3><span class="w">Ponderación ${Math.round(c.ponderacion * 100)}%</span></div>
+      <p>${esc(c.descripcion)}</p>
+      <div class="scale">
+        ${ESCALA.map(([n, t]) => `<label><input type="radio" name="c${c.id}" value="${n}" data-c="${c.id}" ${form.calificaciones[c.id] == n ? 'checked' : ''}><b>${n}</b>${t}</label>`).join('')}
+      </div>
+      <div class="partial" id="p${c.id}"></div>
+    </div>`).join('');
+  actualizarTotales();
+  $('#btnEliminar').classList.toggle('hide', !form.id);
+}
+
+function actualizarTotales() {
+  criterios.forEach(c => {
+    const n = Number(form.calificaciones[c.id]);
+    $('#p' + c.id).textContent = n ? `Calificación parcial: ${n} × ${Math.round(c.ponderacion * 100)}% = ${(n * c.ponderacion).toFixed(2)}` : '';
+  });
+  const { puntaje, completo } = calcular(form.calificaciones);
+  $('#puntaje').textContent = completo ? puntaje.toFixed(2) : '–';
+  const cat = completo ? categoria(puntaje) : null;
+  const b = $('#cat');
+  b.textContent = cat || 'Sin calificar';
+  b.className = 'badge' + (cat ? ' ' + cat : '');
+}
+
+function mostrarForm() {
+  $('#vistaLista').classList.add('hide');
+  $('#vistaForm').classList.remove('hide');
+  $('#btnNuevo').classList.add('hide');
+  pintarForm();
+  window.scrollTo(0, 0);
+}
+
+function validarForm() {
+  if (!form.proveedor.trim()) return 'Escribe el nombre del proveedor.';
+  if (!form.nit.trim()) return 'Escribe el NIT del proveedor.';
+  if (!form.fecha) return 'Selecciona la fecha.';
+  const falta = criterios.find(c => !form.calificaciones[c.id]);
+  if (falta) return `Falta calificar: ${falta.nombre}.`;
+  if (!form.aceptado) return 'Indica si se acepta al proveedor.';
+  return null;
+}
+
+/* ---------- Eventos ---------- */
+$('#btnNuevo').onclick = () => { form = nuevoForm(); mostrarForm(); };
+$('#btnVolver').onclick = mostrarLista;
+$('#btnImprimir').onclick = () => window.print();
+$('#buscar').oninput = pintarLista;
+
+$('#filas').addEventListener('click', async e => {
+  const tr = e.target.closest('tr[data-id]');
+  if (!tr) return;
+  try {
+    const ev = await api.obtener(Number(tr.dataset.id));
+    if (!ev) return aviso('No se encontró la evaluación.', 'err');
+    form = { ...nuevoForm(), ...ev, calificaciones: { ...ev.calificaciones } };
+    mostrarForm();
+  } catch (err) { aviso(err.message, 'err'); }
+});
+
+$('#vistaForm').addEventListener('input', e => {
+  const f = e.target.dataset.f;
+  if (f) form[f] = e.target.value;
+});
+$('#vistaForm').addEventListener('change', e => {
+  const f = e.target.dataset.f;
+  if (f) form[f] = e.target.value;
+  if (e.target.dataset.c) { form.calificaciones[e.target.dataset.c] = Number(e.target.value); actualizarTotales(); }
+});
+
+$('#btnGuardar').onclick = async () => {
+  const err = validarForm();
+  if (err) return aviso(err, 'err');
+  try {
+    const r = await api.guardar(form);
+    aviso('Evaluación guardada.');
+    form.id = r.id;
+    await mostrarLista();
+  } catch (e) { aviso(e.message, 'err'); }
+};
+
+$('#btnEliminar').onclick = async () => {
+  if (!form.id || !confirm('¿Eliminar esta evaluación? No se puede deshacer.')) return;
+  try { await api.eliminar(form.id); aviso('Evaluación eliminada.'); await mostrarLista(); }
+  catch (e) { aviso(e.message, 'err'); }
+};
+
+(async function init() {
+  try { criterios = await api.criterios(); } catch (e) { criterios = CRITERIOS_BASE; aviso(e.message, 'err'); }
+  await mostrarLista();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* Estilos – Matriz de evaluación de proveedores */
+:root {
+  --bg:#f5f7fa; --card:#fff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --brand:#0f766e; --brand-soft:#ccfbf1; --danger:#b91c1c;
+  --c-exc:#16a34a; --c-bue:#0284c7; --c-ace:#d97706; --c-def:#dc2626;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#111827; --card:#1f2937; --ink:#f3f4f6; --muted:#9ca3af; --line:#374151;
+          --brand:#2dd4bf; --brand-soft:#134e4a; --danger:#f87171; }
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+header, main { max-width:1000px; margin:0 auto; padding:16px; }
+header { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; padding-bottom:0; }
+h1 { font-size:20px; margin:0; }
+h1 small { display:block; font-weight:400; color:var(--muted); font-size:13px; margin-top:2px; }
+h2 { font-size:16px; margin:0 0 12px; }
+.btn { border:1px solid var(--line); background:var(--card); color:var(--ink); padding:8px 14px; border-radius:8px; cursor:pointer; font:inherit; font-size:14px; }
+.btn.primary { background:var(--brand); border-color:var(--brand); color:#fff; font-weight:600; }
+.btn.danger { color:var(--danger); }
+.card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px; }
+#banner { display:none; margin:0 0 12px; padding:10px 14px; border-radius:8px; background:#fef3c7; color:#78350f; font-size:13px; }
+#msg { display:none; margin:0 0 12px; padding:10px 14px; border-radius:8px; font-size:14px; }
+#msg.ok { background:#dcfce7; color:#14532d; } #msg.err { background:#fee2e2; color:#7f1d1d; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+label.f { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.03em; }
+input[type=text], input[type=date], select, textarea { font:inherit; font-size:14px; text-transform:none; letter-spacing:0; font-weight:400; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px; width:100%; }
+textarea { min-height:90px; resize:vertical; }
+.crit-head { display:flex; justify-content:space-between; gap:12px; align-items:baseline; flex-wrap:wrap; }
+.crit-head h3 { margin:0; font-size:15px; }
+.crit-head .w { font-size:12px; color:var(--muted); white-space:nowrap; }
+.crit p { margin:4px 0 10px; font-size:13px; color:var(--muted); }
+.scale { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.scale label { border:1px solid var(--line); border-radius:8px; padding:8px 4px; text-align:center; cursor:pointer; font-size:12px; line-height:1.3; }
+.scale label b { display:block; font-size:16px; }
+.scale input { position:absolute; opacity:0; pointer-events:none; }
+.scale label:has(input:checked) { background:var(--brand); border-color:var(--brand); color:#fff; }
+.scale label:has(input:focus-visible) { outline:2px solid var(--brand); outline-offset:2px; }
+.partial { margin-top:8px; font-size:13px; color:var(--muted); text-align:right; }
+.total { display:flex; flex-wrap:wrap; gap:20px; align-items:center; }
+.big { font-size:34px; font-weight:700; line-height:1; }
+.badge { display:inline-block; padding:4px 12px; border-radius:999px; color:#fff; font-size:13px; font-weight:600; background:var(--muted); }
+.badge.Excelente { background:var(--c-exc); } .badge.Bueno { background:var(--c-bue); }
+.badge.Aceptable { background:var(--c-ace); } .badge.Deficiente { background:var(--c-def); }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font-size:12px; text-transform:uppercase; color:var(--muted); letter-spacing:.03em; }
+tbody tr.click { cursor:pointer; } tbody tr.click:hover { background:var(--bg); }
+.actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+.empty { color:var(--muted); text-align:center; padding:24px; }
+.ref td:first-child { white-space:nowrap; font-weight:600; }
+.hide { display:none !important; }
+@media (max-width:560px) { .scale { grid-template-columns:repeat(5,minmax(0,1fr)); } .scale label { font-size:10px; padding:6px 2px; } }
+@media print {
+  body { background:#fff; color:#000; } header .btn, .actions, #banner, #msg { display:none !important; }
+  .card { break-inside:avoid; border-color:#999; }
+}
+
+/* Clases que reemplazan estilos en línea */
+.buscar { margin-bottom:10px; }
+.tabla-scroll { overflow-x:auto; }
+.ayuda { font-size:13px; color:var(--muted); margin:0 0 10px; }
+.etiqueta { font-size:12px; color:var(--muted); font-weight:600; }
+.etiqueta.sep { margin-bottom:6px; }
+.f.aceptado { min-width:180px; }
