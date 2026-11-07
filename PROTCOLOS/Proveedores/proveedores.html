@@ -119,6 +119,8 @@ const store = {
 
 async function http(url, opts = {}) {
   const r = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  // Si la respuesta no es JSON no es nuestra API (p. ej. GitHub Pages devuelve una página 404): se trata como "sin servidor"
+  if (!(r.headers.get('content-type') || '').includes('application/json')) throw new Error('Sin servidor');
   const data = await r.json().catch(() => ({}));
   if (!r.ok) { const e = new Error(data.error || 'Error ' + r.status); e.status = r.status; throw e; }
   return data;
