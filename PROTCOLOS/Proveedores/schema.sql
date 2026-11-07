@@ -1,9 +1,26 @@
+-- =====================================================================
 -- Matriz de evaluación de proveedores - Centro Óptico San Antonio
--- Se instala dentro de la base de datos existente Opticas_San_Antonio.
+--
+-- BASE DE DATOS DESTINO:  Opticas_San_Antonio
+--
+-- Este script genera las tablas ÚNICAMENTE en la base de datos
+-- Opticas_San_Antonio (debe existir previamente). Si no existe, el
+-- script se detiene sin crear nada.
+--
 -- Las tablas quedan en un esquema propio llamado "evaluacion", así no chocan con
 -- tablas que ya tengas (por ejemplo una tabla Proveedores).
 -- Es seguro ejecutarlo más de una vez: no borra datos existentes.
+-- =====================================================================
 
+-- Verifica que exista la base de datos Opticas_San_Antonio
+IF DB_ID('Opticas_San_Antonio') IS NULL
+BEGIN
+    RAISERROR('No existe la base de datos Opticas_San_Antonio. Créala antes de ejecutar este script.', 16, 1);
+    SET NOEXEC ON;  -- detiene el resto del script
+END
+GO
+
+-- Todas las tablas se crean en la base de datos Opticas_San_Antonio
 USE Opticas_San_Antonio;
 GO
 
@@ -64,4 +81,8 @@ INSERT INTO evaluacion.Criterios (id, nombre, descripcion, ponderacion, orden) V
 (4, N'Experiencia y reputación', N'El proveedor tiene experiencia trabajando con otros laboratorios ópticos.', 0.10, 4),
 (5, N'Servicio al cliente',      N'El proveedor tiene un buen servicio postventa y responde rápidamente a las consultas.', 0.15, 5),
 (6, N'Cumplimiento normativo',   N'El proveedor cumple con las regulaciones locales y cuenta con las certificaciones necesarias.', 0.15, 6);
+GO
+
+-- Fin del script (se reactiva la ejecución por si se detuvo arriba)
+SET NOEXEC OFF;
 GO

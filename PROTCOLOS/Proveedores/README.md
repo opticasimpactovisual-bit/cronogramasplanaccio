@@ -5,10 +5,11 @@ Versión web del Excel "Matriz de evaluación de proveedores". Los datos se guar
 > Guárdalo en una carpeta propia, separada del proyecto del cronograma (usa los mismos nombres de archivo).
 
 ## Archivos
-- `index.html`: la página (lista de evaluaciones y formulario).
+- `proveedores.html`: la página (lista de evaluaciones y formulario).
 - `server.js`: API en Node/Express que conecta con SQL Server.
 - `schema.sql`: crea las tablas y los 6 criterios dentro de tu base `Opticas_San_Antonio` (en el esquema `evaluacion`).
-- `env.example`: renómbralo a `.env` y pon tus datos de conexión.
+- `.env.example`: cópialo como `.env` y pon tus datos de conexión.
+- `probar-conexion.js`: prueba la conexión y las tablas (`npm run probar`).
 - `package.json`: dependencias.
 
 ## Crear las tablas en Opticas_San_Antonio
@@ -17,10 +18,11 @@ Versión web del Excel "Matriz de evaluación de proveedores". Los datos se guar
 3. Con `sqlcmd` sería: `sqlcmd -S localhost -U sa -P tu_clave -i schema.sql`
 
 ## Puesta en marcha
-1. Renombra `env.example` a `.env` y completa `DB_SERVER`, `DB_USER` y `DB_PASSWORD` (`DB_NAME` ya viene como `Opticas_San_Antonio`).
+1. Copia `.env.example` como `.env` y completa `DB_SERVER`, `DB_USER` y `DB_PASSWORD` (`DB_NAME` ya viene como `Opticas_San_Antonio`).
 2. `npm install`
-3. `npm start`
-4. Abre http://localhost:3000
+3. `npm run probar` → confirma la conexión y que existan las 4 tablas del esquema `evaluacion`.
+4. `npm start`
+5. Abre http://localhost:3000
 
 Si ya tienes corriendo el cronograma en el puerto 3000, cambia `PORT` en `.env` (por ejemplo `3001`).
 

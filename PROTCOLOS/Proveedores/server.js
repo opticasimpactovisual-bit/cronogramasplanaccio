@@ -147,8 +147,11 @@ async function guardar(id, body) {
 }
 
 // Página
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'proveedores.html')));
 app.get('/proveedores.css', (req, res) => res.sendFile(path.join(__dirname, 'proveedores.css')));
+app.get('/proveedores.html', (req, res) => res.sendFile(path.join(__dirname, 'proveedores.html')));
+// Logo y páginas de protocolos (para el encabezado y el botón Inicio)
+app.use('/PROTOCOLOS', express.static(path.join(__dirname, '..', 'PROTOCOLOS')));
 
 app.get('/api/criterios', wrap(async (req, res) => {
   const pool = await getPool();
